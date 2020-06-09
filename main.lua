@@ -10,6 +10,7 @@ function love.load()
 	samuri_idle()
 	samuri_run()
 	samuri_attack()
+	samurai_slash = love.audio.newSource("sound-assets/samurai-slash.mp3", "stream")
 	currentFrame = 1
 end
 
@@ -25,6 +26,7 @@ function love.update(dt)
 		samuri.x = samuri.x + samuri.speed * dt
 	elseif love.mouse.isDown(1) then
 		currentIndex = 4
+		samurai_slash:play()
 	end
 	
 	currentFrame = currentFrame + samuri_animation_index[currentIndex] * dt
