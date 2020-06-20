@@ -1,24 +1,24 @@
 --[[
-* add dropping blocks of fruit
-* add collsion detection to slice fruit
-* add scene barrier
+* add blocks of fruit
+* add collsion detection
 * add level progression
 * add menu selection and option screen
 ]]--
 
 love.window.setFullscreen(true, "desktop")
-background = love.graphics.newImage("art-assets/background/airadventurelevel4.png")
-sounds = love.audio.newSource("sound-assets/sword-02.wav", "stream")
+background = love.graphics.newImage("art-assets/background/airadventurelevel1.png")
+sounds = love.audio.newSource("sound-assets/swing-samurai-sword.wav", "stream")
 music = love.audio.newSource("sound-assets/DojoBattle.mp3", "stream")
 music:setLooping(true)
 music:play()
 
 function love.load()
    samuri = {}
+	samuri.img = love.graphics.newImage("art-assets/Samurai/5x/idle_1.png")
 	samuri_animation_index = {}
-	samuri.x = 500
-   samuri.y = 800
-	samuri.speed = 1000
+	samuri.x = love.graphics.getWidth() / 2
+   samuri.y = 250 + love.graphics.getHeight() / 2
+	samuri.speed = 800
 	samuri_idle()
 	samuri_run()
 	samuri_attack()
@@ -27,19 +27,33 @@ function love.load()
 	isAttacking = false
 	samuri.ground = samuri.y
 	samuri.y_velocity = 0
-	samuri.jump_height = -300
-	samuri.gravity = -500
+	samuri.jump_height = -500
+	samuri.gravity = -800
 	isJumping = false
+	
+	fruit_cannon = {}
+	fruit_cannon.img = love.graphics.newImage("art-assets/blocks/Fruit_cannon.png")
+	fruit_cannon.x = 575 + love.graphics.getWidth() / 2
+	fruit_cannon.y = 45 + love.graphics.getHeight() / 2
+	
+	fruit_cannon2 = {}
+	fruit_cannon2.img = love.graphics.newImage("art-assets/blocks/Fruit_cannon2.png")
+	fruit_cannon2.x = -575 + love.graphics.getWidth() / 2
+	fruit_cannon2.y = 45 + love.graphics.getHeight() / 2
 end
 
 function love.update(dt)
 	currentIndex = 1
 	if love.keyboard.isDown("a") and not isJumping then
 		currentIndex = 3
-		samuri.x = samuri.x - samuri.speed * dt
+		if samuri.x > 150 then 
+			samuri.x = samuri.x - (samuri.speed * dt)
+		end
 	elseif love.keyboard.isDown("d") and not isJumping then
 		currentIndex = 2
-		samuri.x = samuri.x + samuri.speed * dt
+		if samuri.x < (love.graphics.getWidth() - samuri.img:getWidth()) then
+			samuri.x = samuri.x + (samuri.speed * dt)
+		end
 	elseif love.mouse.isDown(1) or isAttacking then
 		if isAttacking == false then
 			sounds:play()
@@ -77,6 +91,7 @@ function love.draw()
 			love.graphics.draw(background, i * background:getWidth(), j * background:getHeight())
 		end
 	end
+	
 	if currentIndex == 1 then love.graphics.draw(samuri_animation_idle[math.floor(currentFrame)], samuri.x, samuri.y) 
 	elseif
 		currentIndex == 2 then love.graphics.draw(samuri_animation_run[math.floor(currentFrame)], samuri.x, samuri.y)
@@ -87,6 +102,9 @@ function love.draw()
 	elseif
 		currentIndex == 5 then love.graphics.draw(samuri_animation_jump[math.floor(currentFrame)], samuri.x, samuri.y)
 	end
+	
+	love.graphics.draw(fruit_cannon.img, fruit_cannon.x, fruit_cannon.y)
+	love.graphics.draw(fruit_cannon2.img, fruit_cannon2.x, fruit_cannon2.y, 0, -1, 1)
 end
 
 function samuri_idle()
