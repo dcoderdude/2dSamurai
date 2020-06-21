@@ -1,2 +1,6 @@
 art-assets/*
 sound-assets/*
+package/*
+*.zip
+*.love
+*.exe
