@@ -1,15 +1,38 @@
 --[[
-* add level progression
-* add menu selection and option screen
-]]--
+Backlog
+- show full playable area regardless of screen aspect ratio (may crop optional visuals)
+- horizontal movement while jumping
+- support swinging sword towards mouse cursor
+- platforms
+- suface interaction (slide on slick surface, slide downhill)
+- menu selection and option screen
+- volume control (from options)
+- timer for completing area (or fruit slice count) (scoreboard + timer)
+- end of round state
+- new area progression
+- score board (fruit sliced count in limited time, or how quickly did you slice enough fruit)
+- [multiplayer] connect, other player simply visible per update.
+- [multiplayer] dead reckoning (have other player continue to move while waiting for next update)
+- [multiplayer] co-op
+- [multiplayer] vs
+- [multiplayer] collide with other player
+]]
 
+--[[
+other player data
+- position
+- facing left or right
+- y velocity for moving up or down
+]]
+
+math.randomseed(os.time())
 love.window.setFullscreen(true, "desktop")
-background = love.graphics.newImage("art-assets/background/airadventurelevel4.png")
+background = love.graphics.newImage("art-assets/background/airadventurelevel".. math.random(1,4) ..".png")
 sword_slash = love.audio.newSource("sound-assets/swing-samurai-sword.wav", "stream")
 fruit_blast = love.audio.newSource("sound-assets/fruit-blast.wav", "stream")
 music = love.audio.newSource("sound-assets/DojoBattle.mp3", "stream")
 music:setLooping(true)
-music:play()
+--music:play()
 
 function love.load()
    samuri = {}
@@ -46,6 +69,10 @@ function love.load()
 	fruit_blocks.gravity = -1800
 	fruit_blocks.angle = 0
 	fruit_blocks.speed = 300
+	
+	red = 0/255
+	green = 0/255
+	blue = 0/255
 end
 
 function love.update(dt)
@@ -142,6 +169,8 @@ function love.draw()
 		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fire_blast.png"), -575 + cannon_blast.x, cannon_blast.y, 0, -1, 1)
 		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Dragon_Fruit_image.png"), fruit_blocks.x, fruit_blocks.y, fruit_blocks.angle, -1, 1)
 	end
+	
+	display_timer()
 end
 
 function samuri_idle()
@@ -178,4 +207,11 @@ function samuri_jump()
 	for i=1,samuri_animation_index[5] do
       table.insert(samuri_animation_jump, love.graphics.newImage("art-assets/Samurai/5x/jump_" .. i .. ".png"))
    end
+end
+
+function display_timer()
+	timer = tostring(string.format("Slice time!\n \t%.1f", os.clock()))
+	color = {red, green, blue}
+	colored_text = {color,timer}
+	love.graphics.print(colored_text, 100, 190, 0, 2.5, 2.5)
 end
