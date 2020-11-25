@@ -7,7 +7,7 @@ Backlog
 - suface interaction (slide on slick surface, slide downhill)
 - menu selection and option screen
 - volume control (from options)
-- timer for completing area (or fruit slice count) (scoreboard + timer)
+- scoreboard
 - end of round state
 - new area progression
 - score board (fruit sliced count in limited time, or how quickly did you slice enough fruit)
@@ -32,7 +32,7 @@ sword_slash = love.audio.newSource("sound-assets/swing-samurai-sword.wav", "stre
 fruit_blast = love.audio.newSource("sound-assets/fruit-blast.wav", "stream")
 music = love.audio.newSource("sound-assets/DojoBattle.mp3", "stream")
 music:setLooping(true)
---music:play()
+music:play()
 
 function love.load()
    samuri = {}
@@ -73,6 +73,7 @@ function love.load()
 	red = 0/255
 	green = 0/255
 	blue = 0/255
+	love.graphics.scale(0.5, 0.5)
 end
 
 function love.update(dt)
