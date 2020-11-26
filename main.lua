@@ -25,20 +25,32 @@ other player data
 - y velocity for moving up or down
 ]]
 
-math.randomseed(os.time())
-love.window.setFullscreen(true, "desktop")
-background = love.graphics.newImage("art-assets/background/airadventurelevel".. math.random(1,4) ..".png")
-sword_slash = love.audio.newSource("sound-assets/swing-samurai-sword.wav", "stream")
-fruit_blast = love.audio.newSource("sound-assets/fruit-blast.wav", "stream")
-music = love.audio.newSource("sound-assets/DojoBattle.mp3", "stream")
-music:setLooping(true)
-music:play()
-
 function love.load()
+  math.randomseed(os.time())
+  -- love.window.setMode(640, 480, {resizable=true})
+  love.window.setFullscreen(true, "desktop")
+  local backgrounds = {
+    'airadventurelevel1.png',
+    'airadventurelevel2.png',
+    'airadventurelevel3.png',
+    'airadventurelevel4.png',
+    'Fruit_Samurai_Art_back_drop.png'
+  }
+  background = love.graphics.newImage(
+    'art-assets/background/'..backgrounds[math.random(#backgrounds)]
+  )
+  sword_slash = love.audio.newSource("sound-assets/swing-samurai-sword.wav", "stream")
+  fruit_blast = love.audio.newSource("sound-assets/fruit-blast.wav", "stream")
+  music = love.audio.newSource("sound-assets/DojoBattle.mp3", "stream")
+  music:setLooping(true)
+  music:play()
+
+  playableWidth = 1920
+  playableHeight = 1080
    samuri = {}
 	samuri_animation_index = {}
-	samuri.x = love.graphics.getWidth() / 2
-   samuri.y = 250 + love.graphics.getHeight() / 2
+	samuri.x = playableWidth / 2
+   samuri.y = 250 + playableHeight / 2
 	samuri.speed = 800
 	samuri_idle()
 	samuri_run()
@@ -53,16 +65,16 @@ function love.load()
 	isJumping = false
 	
 	fruit_cannon = {}
-	fruit_cannon.x = love.graphics.getWidth() / 2
-	fruit_cannon.y = love.graphics.getHeight() / 2
+	fruit_cannon.x = playableWidth / 2
+	fruit_cannon.y = playableHeight / 2
 	
 	cannon_blast = {}
-	cannon_blast.x = love.graphics.getWidth() / 2
-	cannon_blast.y = love.graphics.getHeight() / 2
+	cannon_blast.x = playableWidth / 2
+	cannon_blast.y = playableHeight / 2
 	
 	fruit_blocks = {}
-	fruit_blocks.x = love.graphics.getWidth() / 2
-	fruit_blocks.y = 250 + love.graphics.getHeight() / 2
+	fruit_blocks.x = playableWidth / 2
+	fruit_blocks.y = 250 + playableHeight / 2
 	fruit_blocks.ground = fruit_blocks.y
 	fruit_blocks.y_velocity = 0
 	fruit_blocks_height = -1500
@@ -73,7 +85,7 @@ function love.load()
 	red = 0/255
 	green = 0/255
 	blue = 0/255
-	love.graphics.scale(0.5, 0.5)
+  love.audio.setVolume(.1)
 end
 
 function love.update(dt)
@@ -85,7 +97,7 @@ function love.update(dt)
 		end
 	elseif love.keyboard.isDown("d") and not isJumping then
 		currentIndex = 2
-		if samuri.x < (love.graphics.getWidth() - samuri_animation_run[math.floor(currentFrame)]:getWidth()) then
+		if samuri.x < (playableWidth - samuri_animation_run[math.floor(currentFrame)]:getWidth()) then
 			samuri.x = samuri.x + (samuri.speed * dt)
 		end
 	elseif love.mouse.isDown(1) or isAttacking then
@@ -138,12 +150,20 @@ function love.update(dt)
 end
 
 function love.draw()
-	for i = 0, love.graphics.getWidth() / background:getWidth() do
-		for j = 0, love.graphics.getHeight() / background:getHeight() do
-			love.graphics.draw(background, i * background:getWidth(), j * background:getHeight())
-		end
-	end
-	
+  local graphicsWidth, graphicsHeight = love.graphics.getDimensions()
+  love.graphics.translate(graphicsWidth / 2, graphicsHeight / 2)
+	love.graphics.scale(
+    math.min(graphicsWidth / playableWidth, graphicsHeight / playableHeight)
+  )
+  love.graphics.translate(-playableWidth / 2, -playableHeight / 2)
+	love.graphics.draw(
+    background,
+    0,
+    0,
+    0,
+    playableWidth / background:getWidth(),
+    playableHeight / background:getHeight()
+  )
 	if currentIndex == 1 then love.graphics.draw(samuri_animation_idle[math.floor(currentFrame)], samuri.x, samuri.y) 
 	elseif
 		currentIndex == 2 then love.graphics.draw(samuri_animation_run[math.floor(currentFrame)], samuri.x, samuri.y)
