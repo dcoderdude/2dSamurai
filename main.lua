@@ -1,13 +1,14 @@
 --[[
 Backlog
-- show full playable area regardless of screen aspect ratio (may crop optional visuals)
+- more fruit
+- align asset flipping (center images on x, y)
 - horizontal movement while jumping
-- support swinging sword towards mouse cursor
+- support swinging sword towards mouse cursor (starbound)
+- improve sword and fruit collision, only on swing
 - platforms
 - suface interaction (slide on slick surface, slide downhill)
 - menu selection and option screen
 - volume control (from options)
-- scoreboard
 - end of round state
 - new area progression
 - score board (fruit sliced count in limited time, or how quickly did you slice enough fruit)
@@ -26,7 +27,6 @@ other player data
 ]]
 
 function love.load()
-  math.randomseed(os.time())
   -- love.window.setMode(640, 480, {resizable=true})
   love.window.setFullscreen(true, "desktop")
   local backgrounds = {
@@ -36,21 +36,24 @@ function love.load()
     'airadventurelevel4.png',
     'Fruit_Samurai_Art_back_drop.png'
   }
+  local osTime = os.time()
+  math.randomseed(osTime)
   background = love.graphics.newImage(
     'art-assets/background/'..backgrounds[math.random(#backgrounds)]
   )
-  sword_slash = love.audio.newSource("sound-assets/swing-samurai-sword.wav", "stream")
-  fruit_blast = love.audio.newSource("sound-assets/fruit-blast.wav", "stream")
+  cannon_blast_sound = love.audio.newSource("sound-assets/8-bit-cannon.wav","stream")
+  sword_slash_sounds = love.audio.newSource("sound-assets/swing-samurai-sword.wav", "stream")
+  fruit_blast_sounds = love.audio.newSource("sound-assets/fruit-blast.wav", "stream")
   music = love.audio.newSource("sound-assets/DojoBattle.mp3", "stream")
   music:setLooping(true)
   music:play()
 
   playableWidth = 1920
   playableHeight = 1080
-   samuri = {}
+	samuri = {}
 	samuri_animation_index = {}
 	samuri.x = playableWidth / 2
-   samuri.y = 250 + playableHeight / 2
+	samuri.y = 250 + playableHeight / 2
 	samuri.speed = 800
 	samuri_idle()
 	samuri_run()
@@ -63,25 +66,26 @@ function love.load()
 	samuri.jump_height = -500
 	samuri.gravity = -800
 	isJumping = false
-	
+
 	fruit_cannon = {}
 	fruit_cannon.x = playableWidth / 2
 	fruit_cannon.y = playableHeight / 2
-	
+
 	cannon_blast = {}
 	cannon_blast.x = playableWidth / 2
 	cannon_blast.y = playableHeight / 2
-	
+
 	fruit_blocks = {}
 	fruit_blocks.x = playableWidth / 2
 	fruit_blocks.y = 250 + playableHeight / 2
 	fruit_blocks.ground = fruit_blocks.y
+	fruit_blocks.x_velocity = 0
 	fruit_blocks.y_velocity = 0
 	fruit_blocks_height = -1500
 	fruit_blocks.gravity = -1800
 	fruit_blocks.angle = 0
 	fruit_blocks.speed = 300
-	
+
 	red = 0/255
 	green = 0/255
 	blue = 0/255
@@ -102,7 +106,7 @@ function love.update(dt)
 		end
 	elseif love.mouse.isDown(1) or isAttacking then
 		if isAttacking == false then
-			sword_slash:play()
+			sword_slash_sounds:play()
 		end
 		isAttacking = true
 		currentIndex = 4
@@ -129,27 +133,25 @@ function love.update(dt)
 		isAttacking = false
    end
 	
-	if fruit_blocks.y_velocity == 0 then
-		fruit_blocks.y_velocity = fruit_blocks_height
-	end
-	if fruit_blocks.y_velocity ~=0 then
-		fruit_blocks.y = fruit_blocks.y + fruit_blocks.y_velocity * dt
-		fruit_blocks.y_velocity = fruit_blocks.y_velocity - fruit_blocks.gravity * dt
-	end
+	fruit_blocks.y_velocity = fruit_blocks.y_velocity - fruit_blocks.gravity * dt
 	if fruit_blocks.y > fruit_blocks.ground then
-		fruit_blocks.y_velocity = 0
+		fruit_blocks.y_velocity = -fruit_blocks.y_velocity
 		fruit_blocks.y = fruit_blocks.ground
 	end
-
-	mouse_x, mouse_y = love.mouse.getPosition()
-   fruit_blocks.angle = math.atan2(mouse_x - fruit_blocks.y, mouse_y - fruit_blocks.x)
-   cos = math.cos(fruit_blocks.angle)
-   sin = math.sin(fruit_blocks.angle)
-   fruit_blocks.x = fruit_blocks.x + fruit_blocks.speed * cos * dt
-   fruit_blocks.y = fruit_blocks.y + fruit_blocks.speed * sin * dt
+	
+	if math.floor(os.clock()) % 3 == 0 then
+		fruit_blocks.x, fruit_blocks.y = 575 + cannon_blast.x, cannon_blast.y
+		fruit_blocks.x_velocity, fruit_blocks.y_velocity = -1000, 0
+	elseif math.floor(os.clock()) % 5 == 0 then
+		fruit_blocks.x, fruit_blocks.y = -575 + cannon_blast.x, cannon_blast.y
+		fruit_blocks.x_velocity, fruit_blocks.y_velocity = 1000, 0
+	end
+	fruit_blocks.x = fruit_blocks.x + fruit_blocks.x_velocity * dt
+	fruit_blocks.y = fruit_blocks.y + fruit_blocks.y_velocity * dt
 end
 
 function love.draw()
+  love.graphics.reset()
   local graphicsWidth, graphicsHeight = love.graphics.getDimensions()
   love.graphics.translate(graphicsWidth / 2, graphicsHeight / 2)
 	love.graphics.scale(
@@ -175,23 +177,28 @@ function love.draw()
 		currentIndex == 5 then love.graphics.draw(samuri_animation_jump[math.floor(currentFrame)], samuri.x, samuri.y)
 	end
 	
-	if (math.floor(math.sqrt(math.abs(math.ceil(samuri.x - fruit_blocks.x)) + math.abs(math.ceil(samuri.y - fruit_blocks.y)))) < 10) then
+	if (math.sqrt(math.pow(samuri.x - fruit_blocks.x, 2) + math.pow(samuri.y - fruit_blocks.y, 2)) < 100) then
 		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_explosion.png"), samuri.x - 10, fruit_blocks.y - 10)
-		fruit_blast:play()
-	end
-	love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_cannon_1.png"), 575 + fruit_cannon.x, 45 + fruit_cannon.y)
-	love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_cannon_1.png"), -575 + fruit_cannon.x, 45 + fruit_cannon.y, 0, -1, 1)
-	if math.floor(os.clock()) % 3 == 0 then
-		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_cannon_2.png"), 575 + fruit_cannon.x, 45 + fruit_cannon.y)
-		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fire_blast.png"), 575 + cannon_blast.x, cannon_blast.y)
-		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Dragon_Fruit_image.png"), fruit_blocks.x, fruit_blocks.y, fruit_blocks.angle)
-	elseif math.floor(os.clock()) % 5 == 0 then
-		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_cannon_2.png"), -575 + fruit_cannon.x, 45 + fruit_cannon.y, 0, -1, 1)
-		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fire_blast.png"), -575 + cannon_blast.x, cannon_blast.y, 0, -1, 1)
-		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Dragon_Fruit_image.png"), fruit_blocks.x, fruit_blocks.y, fruit_blocks.angle, -1, 1)
+		fruit_blast_sounds:play()
 	end
 	
+	love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_cannon_1.png"), 575 + fruit_cannon.x, 45 + fruit_cannon.y)
+	love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_cannon_1.png"), -575 + fruit_cannon.x, 45 + fruit_cannon.y, 0, -1, 1)
+	love.graphics.draw(love.graphics.newImage("art-assets/blocks/Dragon_Fruit_image.png"), fruit_blocks.x, fruit_blocks.y)
+	if math.floor(os.clock()) % 3 == 0 then
+		cannon_blast_sound:play()
+		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_cannon_2.png"), 575 + fruit_cannon.x, 45 + fruit_cannon.y)
+		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fire_blast.png"), 575 + cannon_blast.x, cannon_blast.y)
+	elseif math.floor(os.clock()) % 5 == 0 then
+		cannon_blast_sound:play()
+		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_cannon_2.png"), -575 + fruit_cannon.x, 45 + fruit_cannon.y, 0, -1, 1)
+		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fire_blast.png"), -575 + cannon_blast.x, cannon_blast.y, 0, -1, 1)
+	end
 	display_timer()
+	love.graphics.setColor(1,1,1,.01) -- visual collision shapes
+	love.graphics.setLineWidth(3)
+	love.graphics.circle("line",fruit_blocks.x, fruit_blocks.y, 50)
+	love.graphics.circle("line",samuri.x, samuri.y, 50)
 end
 
 function samuri_idle()
