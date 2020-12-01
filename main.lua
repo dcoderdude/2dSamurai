@@ -1,5 +1,6 @@
 --[[
 Backlog
+- make project modular (Use folders. Perhaps one for fruit, the samurai, etc.)
 - more fruit
 - align asset flipping (center images on x, y)
 - horizontal movement while jumping
@@ -17,6 +18,7 @@ Backlog
 - [multiplayer] co-op
 - [multiplayer] vs
 - [multiplayer] collide with other player
+- auto-format source code
 ]]
 
 --[[
@@ -29,17 +31,22 @@ other player data
 function love.load()
   -- love.window.setMode(640, 480, {resizable=true})
   love.window.setFullscreen(true, "desktop")
-  local backgrounds = {
-    'airadventurelevel1.png',
-    'airadventurelevel2.png',
-    'airadventurelevel3.png',
-    'airadventurelevel4.png',
-    'Fruit_Samurai_Art_back_drop.png'
-  }
+  backgroundDirectory = 'art-assets/background/'
+  backgroundItems = love.filesystem.getDirectoryItems( backgroundDirectory )
+  backgrounds = {}
+  for _,background in pairs(backgroundItems) do
+    local info = love.filesystem.getInfo(backgroundDirectory..background, 'file')
+    if nil ~= info then
+      table.insert(backgrounds, background)
+    end
+  end
+  if(#backgrounds < 1) then
+    error('No background files found in '..backgroundDirectory)
+  end
   local osTime = os.time()
   math.randomseed(osTime)
   background = love.graphics.newImage(
-    'art-assets/background/'..backgrounds[math.random(#backgrounds)]
+    backgroundDirectory..backgrounds[math.random(#backgrounds)]
   )
   cannon_blast_sound = love.audio.newSource("sound-assets/8-bit-cannon.wav","stream")
   sword_slash_sounds = love.audio.newSource("sound-assets/swing-samurai-sword.wav", "stream")
