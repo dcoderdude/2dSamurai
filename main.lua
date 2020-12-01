@@ -29,6 +29,24 @@ other player data
 ]]
 
 function love.load()
+local canvas = love.graphics.newCanvas(3, 3)
+  do -- create default image, a fallback when images fail to load.
+    love.graphics.reset()
+    love.graphics.setCanvas(canvas)
+    love.graphics.setPointSize(1)
+    love.graphics.points(
+      1,
+      1,
+      canvas:getWidth(),
+      canvas:getHeight(),
+      canvas:getWidth(),
+      1,
+      1,
+      canvas:getHeight()
+    )
+    love.graphics.setCanvas()
+    defaultImage = love.graphics.newImage(canvas:newImageData())
+  end
   -- love.window.setMode(640, 480, {resizable=true})
   love.window.setFullscreen(true, "desktop")
   backgroundDirectory = 'art-assets/background/'
@@ -40,14 +58,15 @@ function love.load()
       table.insert(backgrounds, background)
     end
   end
-  if(#backgrounds < 1) then
-    error('No background files found in '..backgroundDirectory)
+  if(0 < #backgrounds) then
+    background = love.graphics.newImage(
+      backgroundDirectory..backgrounds[math.random(#backgrounds)]
+    )
+  else
+    background = defaultImage
   end
   local osTime = os.time()
   math.randomseed(osTime)
-  background = love.graphics.newImage(
-    backgroundDirectory..backgrounds[math.random(#backgrounds)]
-  )
   cannon_blast_sound = love.audio.newSource("sound-assets/8-bit-cannon.wav","stream")
   sword_slash_sounds = love.audio.newSource("sound-assets/swing-samurai-sword.wav", "stream")
   fruit_blast_sounds = love.audio.newSource("sound-assets/fruit-blast.wav", "stream")
