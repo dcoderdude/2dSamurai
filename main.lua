@@ -67,11 +67,12 @@ local canvas = love.graphics.newCanvas(3, 3)
   end
   local osTime = os.time()
   math.randomseed(osTime)
-  cannon_blast_sound = love.audio.newSource("sound-assets/8-bit-cannon.wav","stream")
-  sword_slash_sounds = love.audio.newSource("sound-assets/swing-samurai-sword.wav", "stream")
-  fruit_blast_sounds = love.audio.newSource("sound-assets/fruit-blast.wav", "stream")
-  music = love.audio.newSource("sound-assets/DojoBattle.mp3", "stream")
+  cannon_blast_sound = newSource("sound-assets/8-bit-cannon.wav")
+  sword_slash_sounds = newSource("sound-assets/swing-samurai-sword.wav")
+  fruit_blast_sounds = newSource("sound-assets/fruit-blast.wav")
+  music = newSource("sound-assets/DojoBattle.mp3")
   music:setLooping(true)
+  love.audio.setVolume(.1)
   music:play()
 
   playableWidth = 1920
@@ -115,7 +116,6 @@ local canvas = love.graphics.newCanvas(3, 3)
 	red = 0/255
 	green = 0/255
 	blue = 0/255
-  love.audio.setVolume(.1)
 end
 
 function love.update(dt)
@@ -268,4 +268,19 @@ function display_timer()
 	color = {red, green, blue}
 	colored_text = {color,timer}
 	love.graphics.print(colored_text, 100, 190, 0, 2.5, 2.5)
+end
+
+function newSource(filename)
+  local info = love.filesystem.getInfo(filename, 'file')
+  if nil == info then
+    if nil == defaultSoundData then
+      -- default sample rate is 44100 samples per second
+      defaultSoundData = love.sound.newSoundData(44100)     -- 1 second clip
+      for i=0,11024 do                                      -- for a quarter second:
+        defaultSoundData:setSample(i, math.random(-.1, .1)) --   static at 10%
+      end
+    end
+    return love.audio.newSource(defaultSoundData)
+  end
+  return love.audio.newSource(filename, 'stream')
 end
