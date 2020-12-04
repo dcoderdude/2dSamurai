@@ -1,7 +1,8 @@
 --[[
 Backlog
 - make project modular (Use folders. Perhaps one for fruit, the samurai, etc.)
-- more fruit
+- more fruit (load each fruit in fruit folder)
+- more animated variation to fruit (slice in two)
 - align asset flipping (center images on x, y)
 - horizontal movement while jumping
 - support swinging sword towards mouse cursor (starbound)
@@ -29,7 +30,9 @@ other player data
 ]]
 
 function love.load()
-local canvas = love.graphics.newCanvas(3, 3)
+  math.randomseed(os.time())
+
+  local canvas = love.graphics.newCanvas(3, 3)
   do -- create default image, a fallback when images fail to load.
     love.graphics.reset()
     love.graphics.setCanvas(canvas)
@@ -65,8 +68,6 @@ local canvas = love.graphics.newCanvas(3, 3)
   else
     background = defaultImage
   end
-  local osTime = os.time()
-  math.randomseed(osTime)
   cannon_blast_sound = newSource("sound-assets/8-bit-cannon.wav")
   sword_slash_sounds = newSource("sound-assets/swing-samurai-sword.wav")
   fruit_blast_sounds = newSource("sound-assets/fruit-blast.wav")
