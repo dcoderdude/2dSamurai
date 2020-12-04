@@ -1,6 +1,7 @@
 --[[
 Backlog
-- make project modular (Use folders. Perhaps one for fruit, the samurai, etc.)
+- make samurai module for samarai specific assets and logic.
+- make project modular (Use folders. Perhaps one for fruit, physics, etc.)
 - more fruit (load each fruit in fruit folder)
 - more animated variation to fruit (slice in two)
 - align asset flipping (center images on x, y)
@@ -28,6 +29,27 @@ other player data
 - facing left or right
 - y velocity for moving up or down
 ]]
+
+samuri = {}
+function samuri.load()
+  sword_slash_sounds = newSource("sound-assets/swing-samurai-sword.wav")
+
+  samuri_animation_index = {}
+  samuri.x = playableWidth / 2
+  samuri.y = 250 + playableHeight / 2
+  samuri.speed = 800
+  samuri_idle()
+  samuri_run()
+  samuri_attack()
+  samuri_jump()
+  currentFrame = 1
+  isAttacking = false
+  samuri.ground = samuri.y
+  samuri.y_velocity = 0
+  samuri.jump_height = -500
+  samuri.gravity = -800
+  isJumping = false
+end
 
 function love.load()
   math.randomseed(os.time())
@@ -69,7 +91,6 @@ function love.load()
     background = defaultImage
   end
   cannon_blast_sound = newSource("sound-assets/8-bit-cannon.wav")
-  sword_slash_sounds = newSource("sound-assets/swing-samurai-sword.wav")
   fruit_blast_sounds = newSource("sound-assets/fruit-blast.wav")
   music = newSource("sound-assets/DojoBattle.mp3")
   music:setLooping(true)
@@ -78,22 +99,6 @@ function love.load()
 
   playableWidth = 1920
   playableHeight = 1080
-	samuri = {}
-	samuri_animation_index = {}
-	samuri.x = playableWidth / 2
-	samuri.y = 250 + playableHeight / 2
-	samuri.speed = 800
-	samuri_idle()
-	samuri_run()
-	samuri_attack()
-	samuri_jump()
-	currentFrame = 1
-	isAttacking = false
-	samuri.ground = samuri.y
-	samuri.y_velocity = 0
-	samuri.jump_height = -500
-	samuri.gravity = -800
-	isJumping = false
 
 	fruit_cannon = {}
 	fruit_cannon.x = playableWidth / 2
@@ -117,6 +122,8 @@ function love.load()
 	red = 0/255
 	green = 0/255
 	blue = 0/255
+
+  samuri.load()
 end
 
 function love.update(dt)
