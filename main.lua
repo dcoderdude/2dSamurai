@@ -1,5 +1,8 @@
 --[[
 Backlog
+- NPC(hamsters) need to fit sliced fruit into shipping container
+- launch sliced fruit back to mother ship via large cannon(EXPLOSIONS)
+- ultimate move meter released with the Q key
 - make samurai module for samarai specific assets and logic.
 - make project modular (Use folders. Perhaps one for fruit, physics, etc.)
 - more fruit (load each fruit in fruit folder)
@@ -20,6 +23,7 @@ Backlog
 - [multiplayer] co-op
 - [multiplayer] vs
 - [multiplayer] collide with other player
+- [multiplayer] synced sliced causes syncro slice X-strike(prompted)
 - auto-format source code
 ]]
 
