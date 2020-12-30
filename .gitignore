@@ -1,3 +1,5 @@
+*.app
+.DS*
 art-assets/*
 sound-assets/*
 package/*
