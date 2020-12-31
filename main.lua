@@ -1,5 +1,9 @@
 --[[
 Backlog
+- timer background and make amazing looking font
+- add initial variation to fruit path
+- keep fruit in game bounds(have fruit dissolve when out of bounds)
+- fruit leave cannon immidately
 - NPC(hamsters) need to fit sliced fruit into shipping container
 - launch sliced fruit back to mother ship via large cannon(EXPLOSIONS)
 - ultimate move meter released with the Q key
