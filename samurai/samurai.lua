@@ -79,7 +79,7 @@ function samuri_idle()
     samuri_animation_idle = {}
     table.insert(samuri_animation_index,5)
     for i=1,samuri_animation_index[1] do
-      table.insert(samuri_animation_idle, love.graphics.newImage("art-assets/Samurai/5x/idle_" .. i .. ".png"))
+      table.insert(samuri_animation_idle, love.graphics.newImage("samurai/5x/idle_" .. i .. ".png"))
    end
 end
 
@@ -87,11 +87,11 @@ function samuri_run()
     samuri_animation_run = {}
     table.insert(samuri_animation_index,7)
     for i=1,samuri_animation_index[2] do
-      table.insert(samuri_animation_run, love.graphics.newImage("art-assets/Samurai/5x/run_" .. i .. ".png"))
+      table.insert(samuri_animation_run, love.graphics.newImage("samurai/5x/run_" .. i .. ".png"))
    end
     table.insert(samuri_animation_index,7)
     for i=1,samuri_animation_index[3] do
-      table.insert(samuri_animation_run, love.graphics.newImage("art-assets/Samurai/5x/run_" .. i .. ".png"))
+      table.insert(samuri_animation_run, love.graphics.newImage("samurai/5x/run_" .. i .. ".png"))
    end
 end
 
@@ -99,7 +99,7 @@ function samuri_attack()
     samuri_animation_attack = {}
     table.insert(samuri_animation_index,9)
     for i=1,samuri_animation_index[4] do
-      table.insert(samuri_animation_attack, love.graphics.newImage("art-assets/Samurai/5x/attack_" .. i .. ".png"))
+      table.insert(samuri_animation_attack, love.graphics.newImage("samurai/5x/attack_" .. i .. ".png"))
    end
 end
 
@@ -107,6 +107,6 @@ function samuri_jump()
     samuri_animation_jump = {}
     table.insert(samuri_animation_index,4)
     for i=1,samuri_animation_index[5] do
-      table.insert(samuri_animation_jump, love.graphics.newImage("art-assets/Samurai/5x/jump_" .. i .. ".png"))
+      table.insert(samuri_animation_jump, love.graphics.newImage("samurai/5x/jump_" .. i .. ".png"))
    end
 end

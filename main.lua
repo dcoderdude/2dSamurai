@@ -3,8 +3,9 @@ Backlog
 - NPC(hamsters) need to fit sliced fruit into shipping container
 - launch sliced fruit back to mother ship via large cannon(EXPLOSIONS)
 - ultimate move meter released with the Q key
-- make samurai module for samarai specific assets and logic.
-- make project modular (Use folders. Perhaps one for fruit, physics, etc.)
+- make fruit module for fruit specific assets and logic.
+- make cannon module for cannon specific assets and logic.
+- make project modular (Use folders for; sounds, physics, sword, cannon, menus, etc...)
 - more fruit (load each fruit in fruit folder)
 - more animated variation to fruit (slice in two)
 - align asset flipping (center images on x, y)
@@ -33,7 +34,7 @@ other player data
 - facing left or right
 - y velocity for moving up or down
 ]]
-require("samurai")
+require("samurai.samurai")
 
 function love.load()
   math.randomseed(os.time())
