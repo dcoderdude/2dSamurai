@@ -84,7 +84,7 @@ function love.load()
   music = newSource("sound-assets/DojoBattle.mp3")
   music:setLooping(true)
   love.audio.setVolume(.1)
-  music:play()
+  --music:play()
 
   playableWidth = 1920
   playableHeight = 1080
@@ -171,6 +171,10 @@ function love.draw()
 		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fire_blast.png"), -575 + cannon_blast.x, cannon_blast.y, 0, -1, 1)
 	end
 	display_timer()
+  visual_shapes()
+end
+
+function visual_shapes()
 	love.graphics.setColor(1,1,1,.01) -- visual collision shapes
 	love.graphics.setLineWidth(3)
 	love.graphics.circle("line",fruit_blocks.x, fruit_blocks.y, 50)

@@ -1,7 +1,8 @@
 samuri = {}
 function samuri.load()
   sword_slash_sounds = newSource("sound-assets/swing-samurai-sword.wav")
-
+  sleeping_hamster_sounds = newSource("sound-assets/Idol_Hamster_1.wav")
+  swing_hamster_sword_sounds = newSource("sound-assets/Hamster_Squeak_3.wav")
   samuri_animation_index = {}
   samuri.x = playableWidth / 2
   samuri.y = 250 + playableHeight / 2
@@ -12,75 +13,103 @@ function samuri.load()
   samuri_jump()
   currentIndex = 1
   currentFrame = 1
-  isAttacking = false
   samuri.ground = samuri.y
   samuri.y_velocity = 0
   samuri.jump_height = -500
   samuri.gravity = -800
+  isAttacking = false
   isJumping = false
+  isIdle = false
+  wasIdle = false
+  state = ""
 end
 
 function samuri.update(dt)
+  local newState = "idle"
   currentIndex = 1
-    if love.keyboard.isDown("a") and not isJumping then
-        currentIndex = 3
-        if samuri.x > 150 then
-            samuri.x = samuri.x - (samuri.speed * dt)
-        end
-    elseif love.keyboard.isDown("d") and not isJumping then
-        currentIndex = 2
-        if samuri.x < (playableWidth - samuri_animation_run[math.floor(currentFrame)]:getWidth()) then
-            samuri.x = samuri.x + (samuri.speed * dt)
-        end
-    elseif love.mouse.isDown(1) or isAttacking then
-        if isAttacking == false then
-            sword_slash_sounds:play()
-        end
-        isAttacking = true
-        currentIndex = 4
-    elseif love.keyboard.isDown("space") or isJumping then
-        currentIndex = 5
-        if samuri.y_velocity == 0 then
-            isJumping = true
-            samuri.y_velocity = samuri.jump_height
-        end
-        if samuri.y_velocity ~=0 then
-            samuri.y = samuri.y + samuri.y_velocity * dt
-            samuri.y_velocity = samuri.y_velocity - samuri.gravity * dt
-        end
-        if samuri.y > samuri.ground then
-            isJumping = false
-            samuri.y_velocity = 0
-            samuri.y = samuri.ground
-        end
+  -- keyboard interactions
+  if love.keyboard.isDown("a") and not isJumping then
+    newState = "isMoving"
+    currentIndex = 3
+    if samuri.x > 150 then
+      samuri.x = samuri.x - (samuri.speed * dt)
     end
-   if love.keyboard.isDown("escape") then love.event.quit() end
-    currentFrame = currentFrame + samuri_animation_index[currentIndex] * dt
-   if currentFrame >= samuri_animation_index[currentIndex] then
-      currentFrame = 1
-        isAttacking = false
-   end
+  elseif love.keyboard.isDown("d") and not isJumping then
+    newState = "isMoving"
+    currentIndex = 2
+    if samuri.x < (playableWidth - samuri_animation_run[math.floor(currentFrame)]:getWidth()) then
+      samuri.x = samuri.x + (samuri.speed * dt)
+    end
+  elseif love.mouse.isDown(1) or isAttacking then
+    newState = "isMoving"
+    if isAttacking == false then
+      sword_slash_sounds:play()
+      swing_hamster_sword_sounds:play()
+    end
+    isAttacking = true
+    currentIndex = 4
+  elseif love.keyboard.isDown("space") or isJumping then
+    newState = "isMoving"
+    currentIndex = 5
+    if samuri.y_velocity == 0 then
+      newState = "isMoving"
+      isJumping = true
+      samuri.y_velocity = samuri.jump_height
+    end
+    if samuri.y_velocity ~=0 then
+      samuri.y = samuri.y + samuri.y_velocity * dt
+      samuri.y_velocity = samuri.y_velocity - samuri.gravity * dt
+    end
+    if samuri.y > samuri.ground then
+      isJumping = false
+      samuri.y_velocity = 0
+      samuri.y = samuri.ground
+    end
+  end
+  -- exit game event
+  if love.keyboard.isDown("escape") then love.event.quit() end
+
+  -- reset samurai animation
+  if currentFrame >= samuri_animation_index[currentIndex] then
+    currentFrame = 1
+      isAttacking = false
+  end
+  -- idle samurai
+  currentFrame = currentFrame + samuri_animation_index[currentIndex] * dt
+  -- state change for samurai sounds
+  if state ~= newState then
+     -- stop playing sound of prior state      
+     if state == "idle" then
+      sleeping_hamster_sounds:stop()
+     end
+     -- start playing sounds of new state
+     if newState == "idle" then
+      sleeping_hamster_sounds:setLooping(true)
+      sleeping_hamster_sounds:play()
+     end
+     state = newState
+  end
 end
 
 function samuri.draw()
   if currentIndex == 1 then love.graphics.draw(samuri_animation_idle[math.floor(currentFrame)], samuri.x, samuri.y)
     elseif
-        currentIndex == 2 then love.graphics.draw(samuri_animation_run[math.floor(currentFrame)], samuri.x, samuri.y)
+      currentIndex == 2 then love.graphics.draw(samuri_animation_run[math.floor(currentFrame)], samuri.x, samuri.y)
     elseif
-        currentIndex == 3 then love.graphics.draw(samuri_animation_run[math.floor(currentFrame)], samuri.x, samuri.y, 0, -1, 1)
+      currentIndex == 3 then love.graphics.draw(samuri_animation_run[math.floor(currentFrame)], samuri.x, samuri.y, 0, -1, 1)
     elseif
-        currentIndex == 4 then love.graphics.draw(samuri_animation_attack[math.floor(currentFrame)], samuri.x, samuri.y)
+      currentIndex == 4 then love.graphics.draw(samuri_animation_attack[math.floor(currentFrame)], samuri.x, samuri.y)
     elseif
-        currentIndex == 5 then love.graphics.draw(samuri_animation_jump[math.floor(currentFrame)], samuri.x, samuri.y)
+      currentIndex == 5 then love.graphics.draw(samuri_animation_jump[math.floor(currentFrame)], samuri.x, samuri.y)
     end
 end
 
 function samuri_idle()
-    samuri_animation_idle = {}
-    table.insert(samuri_animation_index,5)
-    for i=1,samuri_animation_index[1] do
-      table.insert(samuri_animation_idle, love.graphics.newImage("samurai/5x/idle_" .. i .. ".png"))
-   end
+  samuri_animation_idle = {}
+  table.insert(samuri_animation_index,2)
+  for i=1,samuri_animation_index[1] do
+    table.insert(samuri_animation_idle, love.graphics.newImage("samurai/idle_" .. i .. "_Hamster.png"))
+  end
 end
 
 function samuri_run()
