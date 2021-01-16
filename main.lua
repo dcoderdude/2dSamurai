@@ -81,7 +81,7 @@ function love.load()
   music = newSource("sound-assets/DojoBattle.mp3")
   music:setLooping(true)
   love.audio.setVolume(.1)
-  --music:play()
+  music:play()
 
   playableWidth = 1920
   playableHeight = 1080
@@ -195,6 +195,7 @@ function newSource(filename)
         defaultSoundData:setSample(i, math.random(-.1, .1)) --   static at 10%
       end
     end
+    print('Failed to load sound source: ' .. filename)
     return love.audio.newSource(defaultSoundData)
   end
   return love.audio.newSource(filename, 'stream')

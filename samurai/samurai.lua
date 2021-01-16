@@ -105,6 +105,7 @@ end
 
 function newImage(path)
   if nil == love.filesystem.getInfo(path, 'file') then
+    print('Failed to load image: ' .. path)
     return defaultImage
   else
     return love.graphics.newImage(path)
@@ -115,13 +116,8 @@ function samuri_idle()
   samuri_animation_idle = {}
   table.insert(samuri_animation_index,2)
   for i=1,samuri_animation_index[1] do
-    table.insert(samuri_animation_idle, love.graphics.newImage("samurai/idle_" .. i .. "_Hamster.png"))
+    table.insert(samuri_animation_idle, newImage("samurai/idle_" .. i .. "_Hamster.png"))
   end
-    samuri_animation_idle = {}
-    table.insert(samuri_animation_index,5)
-    for i=1,samuri_animation_index[1] do
-      table.insert(samuri_animation_idle, newImage("samurai/5x/idle_" .. i .. ".png"))
-   end
 end
 
 function samuri_run()
