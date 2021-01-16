@@ -91,16 +91,21 @@ function samuri.update(dt)
 end
 
 function samuri.draw()
-  if currentIndex == 1 then love.graphics.draw(samuri_animation_idle[math.floor(currentFrame)], samuri.x, samuri.y)
-    elseif
-      currentIndex == 2 then love.graphics.draw(samuri_animation_run[math.floor(currentFrame)], samuri.x, samuri.y)
-    elseif
-      currentIndex == 3 then love.graphics.draw(samuri_animation_run[math.floor(currentFrame)], samuri.x, samuri.y, 0, -1, 1)
-    elseif
-      currentIndex == 4 then love.graphics.draw(samuri_animation_attack[math.floor(currentFrame)], samuri.x, samuri.y)
-    elseif
-      currentIndex == 5 then love.graphics.draw(samuri_animation_jump[math.floor(currentFrame)], samuri.x, samuri.y)
-    end
+  local states = {'idle', 'runRight', 'runLeft', 'attack', 'jump'}
+  local animations = {}
+  animations.idle = { frames = samuri_animation_idle, flipped = false }
+  animations.runRight = { frames = samuri_animation_run, flipped = false }
+  animations.runLeft = { frames = samuri_animation_run, flipped = true }
+  animations.attack = { frames = samuri_animation_attack, flipped = false }
+  animations.jump = { frames = samuri_animation_jump, flipped = false }
+  local state = states[currentIndex]
+  local animation = animations[state]
+  local frame = animation.frames[math.floor(currentFrame)]
+  if(animation.flipped) then
+    love.graphics.draw(frame, samuri.x, samuri.y, 0, -1, 1)
+  else
+    love.graphics.draw(frame, samuri.x, samuri.y)
+  end
 end
 
 function newImage(path)
