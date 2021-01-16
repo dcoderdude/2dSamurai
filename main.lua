@@ -43,21 +43,18 @@ require("samurai.samurai")
 function love.load()
   math.randomseed(os.time())
 
-  local canvas = love.graphics.newCanvas(3, 3)
+  local canvas = love.graphics.newCanvas(100, 100)
   do -- create default image, a fallback when images fail to load.
     love.graphics.reset()
     love.graphics.setCanvas(canvas)
-    love.graphics.setPointSize(1)
-    love.graphics.points(
-      1,
-      1,
-      canvas:getWidth(),
-      canvas:getHeight(),
-      canvas:getWidth(),
-      1,
-      1,
-      canvas:getHeight()
-    )
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.setLineWidth(12)
+    love.graphics.line(1, 1, canvas:getWidth(), canvas:getHeight())
+    love.graphics.line(canvas:getWidth(), 1, 1, canvas:getHeight())
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.setLineWidth(8)
+    love.graphics.line(1, 1, canvas:getWidth(), canvas:getHeight())
+    love.graphics.line(canvas:getWidth(), 1, 1, canvas:getHeight())
     love.graphics.setCanvas()
     defaultImage = love.graphics.newImage(canvas:newImageData())
   end
