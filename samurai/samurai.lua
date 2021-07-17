@@ -121,34 +121,34 @@ function samuri_idle()
   samuri_animation_idle = {}
   table.insert(samuri_animation_index,2)
   for i=1,samuri_animation_index[1] do
-    table.insert(samuri_animation_idle, newImage("samurai/idle_" .. i .. "_Hamster.png"))
+    table.insert(samuri_animation_idle, newImage("assets/samurai/idle_" .. i .. ".png"))
   end
 end
 
 function samuri_run()
     samuri_animation_run = {}
-    table.insert(samuri_animation_index,7)
+    table.insert(samuri_animation_index,5)
     for i=1,samuri_animation_index[2] do
-      table.insert(samuri_animation_run, newImage("samurai/5x/run_" .. i .. ".png"))
+      table.insert(samuri_animation_run, newImage("assets/samurai/run_" .. i .. ".png"))
    end
-    table.insert(samuri_animation_index,7)
+    table.insert(samuri_animation_index,5)
     for i=1,samuri_animation_index[3] do
-      table.insert(samuri_animation_run, newImage("samurai/5x/run_" .. i .. ".png"))
+      table.insert(samuri_animation_run, newImage("assets/samurai/run_" .. i .. ".png"))
    end
 end
 
 function samuri_attack()
     samuri_animation_attack = {}
-    table.insert(samuri_animation_index,9)
+    table.insert(samuri_animation_index,7)
     for i=1,samuri_animation_index[4] do
-      table.insert(samuri_animation_attack, newImage("samurai/5x/attack_" .. i .. ".png"))
+      table.insert(samuri_animation_attack, newImage("assets/samurai/attack_" .. i .. ".png"))
    end
 end
 
 function samuri_jump()
     samuri_animation_jump = {}
-    table.insert(samuri_animation_index,4)
+    table.insert(samuri_animation_index,3)
     for i=1,samuri_animation_index[5] do
-      table.insert(samuri_animation_jump, newImage("samurai/5x/jump_" .. i .. ".png"))
+      table.insert(samuri_animation_jump, newImage("assets/samurai/jump_" .. i .. ".png"))
    end
 end

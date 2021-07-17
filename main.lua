@@ -76,7 +76,7 @@ function love.load()
   else
     background = defaultImage
   end
-  cannon_blast_sound = newSource("sound-assets/8-bit-cannon.wav")
+  cannon_blast_sound = newSource("sound-assets/lazercannon.ogg")
   fruit_blast_sounds = newSource("sound-assets/fruit-blast.wav")
   music = newSource("sound-assets/DojoBattle.mp3")
   music:setLooping(true)
