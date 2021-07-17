@@ -1,8 +1,8 @@
 samuri = {}
 function samuri.load()
-  sword_slash_sounds = newSource("sound-assets/swing-samurai-sword.wav")
-  sleeping_hamster_sounds = newSource("sound-assets/Idol_Hamster_1.wav")
-  swing_hamster_sword_sounds = newSource("sound-assets/Hamster_Squeak_3.wav")
+  sword_slash_sounds = newSource("assets/samurai/swing-samurai-sword.wav")
+  sleeping_hamster_sounds = newSource("assets/samurai/Idol_Hamster_1.wav")
+  swing_hamster_sword_sounds = newSource("assets/samurai/Hamster_Squeak_3.wav")
   samuri_animation_index = {}
   samuri.x = playableWidth / 2
   samuri.y = 250 + playableHeight / 2
