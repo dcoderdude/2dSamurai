@@ -40,11 +40,9 @@ other player data
 ]]
 require("samurai.samurai")
 
-function love.load()
-  math.randomseed(os.time())
-
-  local canvas = love.graphics.newCanvas(100, 100)
-  do -- create default image, a fallback when images fail to load.
+function getDefaultImage()
+  if nil == defaultImage then
+    local canvas = love.graphics.newCanvas(100, 100)
     love.graphics.reset()
     love.graphics.setCanvas(canvas)
     love.graphics.setColor(0, 0, 0)
@@ -58,6 +56,12 @@ function love.load()
     love.graphics.setCanvas()
     defaultImage = love.graphics.newImage(canvas:newImageData())
   end
+  return defaultImage
+end
+
+function love.load()
+  math.randomseed(os.time())
+
   -- love.window.setMode(640, 480, {resizable=true})
   love.window.setFullscreen(true, "desktop")
   backgroundDirectory = 'assets/background/'
@@ -70,11 +74,16 @@ function love.load()
     end
   end
   if(0 < #backgrounds) then
+    local i = math.random(#backgrounds)
     background = love.graphics.newImage(
-      backgroundDirectory..backgrounds[math.random(#backgrounds)]
+      backgroundDirectory..backgrounds[i]
     )
   else
-    background = defaultImage
+    background = getDefaultImage()
+  end
+  if background == nil then
+    print('Failed to setup background')
+    love.event.quit()
   end
   cannon_blast_sound = newSource("assets/environment/lazercannon.ogg")
   fruit_blast_sounds = newSource("assets/environment/fruit-blast.wav")
@@ -151,21 +160,21 @@ function love.draw()
 	samuri.draw()
 	
 	if (math.sqrt(math.pow(samuri.x - fruit_blocks.x, 2) + math.pow(samuri.y - fruit_blocks.y, 2)) < 100) then
-		love.graphics.draw(love.graphics.newImage("assets/fruit/Fruit_explosion.png"), samuri.x - 10, fruit_blocks.y - 10)
+		love.graphics.draw(newImage("assets/fruit/Fruit_explosion.png"), samuri.x - 10, fruit_blocks.y - 10)
 		fruit_blast_sounds:play()
 	end
 	
-	love.graphics.draw(love.graphics.newImage("assets/cannon/Fruit_cannon_1.png"), 575 + fruit_cannon.x, 45 + fruit_cannon.y)
-	love.graphics.draw(love.graphics.newImage("assets/cannon/Fruit_cannon_1.png"), -575 + fruit_cannon.x, 45 + fruit_cannon.y, 0, -1, 1)
-	love.graphics.draw(love.graphics.newImage("assets/fruit/Dragon_Fruit_image.png"), fruit_blocks.x, fruit_blocks.y)
+	love.graphics.draw(newImage("assets/cannon/Fruit_cannon_1.png"), 575 + fruit_cannon.x, 45 + fruit_cannon.y)
+	love.graphics.draw(newImage("assets/cannon/Fruit_cannon_1.png"), -575 + fruit_cannon.x, 45 + fruit_cannon.y, 0, -1, 1)
+	love.graphics.draw(newImage("assets/fruit/Dragon_Fruit_image.png"), fruit_blocks.x, fruit_blocks.y)
 	if math.floor(os.clock()) % 3 == 0 then
 		cannon_blast_sound:play()
-		love.graphics.draw(love.graphics.newImage("assets/cannon/Fruit_cannon_2.png"), 575 + fruit_cannon.x, 45 + fruit_cannon.y)
-		love.graphics.draw(love.graphics.newImage("assets/cannon/Fire_blast.png"), 575 + cannon_blast.x, cannon_blast.y)
+		love.graphics.draw(newImage("assets/cannon/Fruit_cannon_2.png"), 575 + fruit_cannon.x, 45 + fruit_cannon.y)
+		love.graphics.draw(newImage("assets/cannon/Fire_blast.png"), 575 + cannon_blast.x, cannon_blast.y)
 	elseif math.floor(os.clock()) % 5 == 0 then
 		cannon_blast_sound:play()
-		love.graphics.draw(love.graphics.newImage("assets/cannon/Fruit_cannon_2.png"), -575 + fruit_cannon.x, 45 + fruit_cannon.y, 0, -1, 1)
-		love.graphics.draw(love.graphics.newImage("assets/cannon/Fire_blast.png"), -575 + cannon_blast.x, cannon_blast.y, 0, -1, 1)
+		love.graphics.draw(newImage("assets/cannon/Fruit_cannon_2.png"), -575 + fruit_cannon.x, 45 + fruit_cannon.y, 0, -1, 1)
+		love.graphics.draw(newImage("assets/cannon/Fire_blast.png"), -575 + cannon_blast.x, cannon_blast.y, 0, -1, 1)
 	end
 	display_timer()
   visual_shapes()
@@ -199,4 +208,13 @@ function newSource(filename)
     return love.audio.newSource(defaultSoundData)
   end
   return love.audio.newSource(filename, 'stream')
+end
+
+function newImage(filename)
+  local info = love.filesystem.getInfo(filename, 'file')
+  if nil == info then
+    print('Failed to load image: ' .. filename)
+    return love.audio.newSource(getDefaultImage())
+  end
+  return love.graphics.newImage(filename)
 end

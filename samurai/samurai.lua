@@ -108,15 +108,6 @@ function samuri.draw()
   end
 end
 
-function newImage(path)
-  if nil == love.filesystem.getInfo(path, 'file') then
-    print('Failed to load image: ' .. path)
-    return defaultImage
-  else
-    return love.graphics.newImage(path)
-  end
-end
-
 function samuri_idle()
   samuri_animation_idle = {}
   table.insert(samuri_animation_index,2)
