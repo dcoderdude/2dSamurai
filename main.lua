@@ -60,7 +60,7 @@ function love.load()
   end
   -- love.window.setMode(640, 480, {resizable=true})
   love.window.setFullscreen(true, "desktop")
-  backgroundDirectory = 'art-assets/background/'
+  backgroundDirectory = 'assets/background/'
   backgroundItems = love.filesystem.getDirectoryItems( backgroundDirectory )
   backgrounds = {}
   for _,background in pairs(backgroundItems) do
@@ -151,21 +151,21 @@ function love.draw()
 	samuri.draw()
 	
 	if (math.sqrt(math.pow(samuri.x - fruit_blocks.x, 2) + math.pow(samuri.y - fruit_blocks.y, 2)) < 100) then
-		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_explosion.png"), samuri.x - 10, fruit_blocks.y - 10)
+		love.graphics.draw(love.graphics.newImage("assets/fruit/Fruit_explosion.png"), samuri.x - 10, fruit_blocks.y - 10)
 		fruit_blast_sounds:play()
 	end
 	
-	love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_cannon_1.png"), 575 + fruit_cannon.x, 45 + fruit_cannon.y)
-	love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_cannon_1.png"), -575 + fruit_cannon.x, 45 + fruit_cannon.y, 0, -1, 1)
-	love.graphics.draw(love.graphics.newImage("art-assets/blocks/Dragon_Fruit_image.png"), fruit_blocks.x, fruit_blocks.y)
+	love.graphics.draw(love.graphics.newImage("assets/cannon/Fruit_cannon_1.png"), 575 + fruit_cannon.x, 45 + fruit_cannon.y)
+	love.graphics.draw(love.graphics.newImage("assets/cannon/Fruit_cannon_1.png"), -575 + fruit_cannon.x, 45 + fruit_cannon.y, 0, -1, 1)
+	love.graphics.draw(love.graphics.newImage("assets/fruit/Dragon_Fruit_image.png"), fruit_blocks.x, fruit_blocks.y)
 	if math.floor(os.clock()) % 3 == 0 then
 		cannon_blast_sound:play()
-		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_cannon_2.png"), 575 + fruit_cannon.x, 45 + fruit_cannon.y)
-		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fire_blast.png"), 575 + cannon_blast.x, cannon_blast.y)
+		love.graphics.draw(love.graphics.newImage("assets/cannon/Fruit_cannon_2.png"), 575 + fruit_cannon.x, 45 + fruit_cannon.y)
+		love.graphics.draw(love.graphics.newImage("assets/cannon/Fire_blast.png"), 575 + cannon_blast.x, cannon_blast.y)
 	elseif math.floor(os.clock()) % 5 == 0 then
 		cannon_blast_sound:play()
-		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fruit_cannon_2.png"), -575 + fruit_cannon.x, 45 + fruit_cannon.y, 0, -1, 1)
-		love.graphics.draw(love.graphics.newImage("art-assets/blocks/Fire_blast.png"), -575 + cannon_blast.x, cannon_blast.y, 0, -1, 1)
+		love.graphics.draw(love.graphics.newImage("assets/cannon/Fruit_cannon_2.png"), -575 + fruit_cannon.x, 45 + fruit_cannon.y, 0, -1, 1)
+		love.graphics.draw(love.graphics.newImage("assets/cannon/Fire_blast.png"), -575 + cannon_blast.x, cannon_blast.y, 0, -1, 1)
 	end
 	display_timer()
   visual_shapes()
