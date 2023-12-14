@@ -1,43 +1,4 @@
---[[
-Backlog
-- timer background and make amazing looking font
-- add initial variation to fruit path
-- keep fruit in game bounds(have fruit dissolve when out of bounds)
-- fruit leave cannon immidately
-- NPC(hamsters) need to fit sliced fruit into shipping container
-- launch sliced fruit back to mother ship via large cannon(EXPLOSIONS)
-- ultimate move meter released with the Q key
-- make fruit module for fruit specific assets and logic.
-- make cannon module for cannon specific assets and logic.
-- make project modular (Use folders for; sounds, physics, sword, cannon, menus, etc...)
-- more fruit (load each fruit in fruit folder)
-- more animated variation to fruit (slice in two)
-- align asset flipping (center images on x, y)
-- horizontal movement while jumping
-- support swinging sword towards mouse cursor (starbound)
-- improve sword and fruit collision, only on swing
-- platforms
-- suface interaction (slide on slick surface, slide downhill)
-- menu selection and option screen
-- volume control (from options)
-- end of round state
-- new area progression
-- score board (fruit sliced count in limited time, or how quickly did you slice enough fruit)
-- [multiplayer] connect, other player simply visible per update.
-- [multiplayer] dead reckoning (have other player continue to move while waiting for next update)
-- [multiplayer] co-op
-- [multiplayer] vs
-- [multiplayer] collide with other player
-- [multiplayer] synced sliced causes syncro slice X-strike(prompted)
-- auto-format source code
-]]
-
---[[
-other player data
-- position
-- facing left or right
-- y velocity for moving up or down
-]]
+-- main game loop
 require("samurai.samurai")
 
 function getDefaultImage()
@@ -176,7 +137,7 @@ function love.draw()
 		love.graphics.draw(newImage("assets/cannon/Fruit_cannon_2.png"), -575 + fruit_cannon.x, 45 + fruit_cannon.y, 0, -1, 1)
 		love.graphics.draw(newImage("assets/cannon/Fire_blast.png"), -575 + cannon_blast.x, cannon_blast.y, 0, -1, 1)
 	end
-	display_timer()
+	display_controls()
   visual_shapes()
 end
 
@@ -187,10 +148,10 @@ function visual_shapes()
 	love.graphics.circle("line",samuri.x, samuri.y, 50)
 end
 
-function display_timer()
-	timer = tostring(string.format("Slice time!\n \t%.1f", os.clock()))
+function display_controls()
+	controls = tostring(string.format("Controls: Move Left(A) Move Right (D) Jump (Spacebar)"))
 	color = {red, green, blue}
-	colored_text = {color,timer}
+	colored_text = {color,controls}
 	love.graphics.print(colored_text, 100, 190, 0, 2.5, 2.5)
 end
 

@@ -1,0 +1,38 @@
+Backlog
+
+- timer background and make amazing looking font
+- add initial variation to fruit path
+- keep fruit in game bounds(have fruit dissolve when out of bounds)
+- fruit leave cannon immidately
+- NPC(hamsters) need to fit sliced fruit into shipping container
+- launch sliced fruit back to mother ship via large cannon(EXPLOSIONS)
+- ultimate move meter released with the Q key
+- make fruit module for fruit specific assets and logic.
+- make cannon module for cannon specific assets and logic.
+- make project modular (Use folders for; sounds, physics, sword, cannon, menus, etc...)
+- more fruit (load each fruit in fruit folder)
+- more animated variation to fruit (slice in two)
+- align asset flipping (center images on x, y)
+- horizontal movement while jumping
+- support swinging sword towards mouse cursor (starbound)
+- improve sword and fruit collision, only on swing
+- platforms
+- suface interaction (slide on slick surface, slide downhill)
+- menu selection and option screen
+- volume control (from options)
+- end of round state
+- new area progression
+- score board (fruit sliced count in limited time, or how quickly did you slice enough fruit)
+- [multiplayer] connect, other player simply visible per update.
+- [multiplayer] dead reckoning (have other player continue to move while waiting for next update)
+- [multiplayer] co-op
+- [multiplayer] vs
+- [multiplayer] collide with other player
+- [multiplayer] synced sliced causes syncro slice X-strike(prompted)
+- auto-format source code
+
+multiplayer data
+
+- position
+- facing left or right
+- y velocity for moving up or down
